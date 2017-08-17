@@ -72,10 +72,13 @@ DOWNLOADER_MIDDLEWARES = {
 
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    'tutorial.pipelines.TutorialPipeline': 300,
-#}
-
+ITEM_PIPELINES = {
+   'tutorial.pipelines.TutorialPipeline': 300,
+}
+MONGODB_HOST='127.0.0.1'
+MONGODB_PORT=27017
+MONGODB_DB='mydb'
+MONGODB_COLLECTION='servers'
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See http://doc.scrapy.org/en/latest/topics/autothrottle.html
 #AUTOTHROTTLE_ENABLED = True
