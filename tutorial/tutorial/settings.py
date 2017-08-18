@@ -9,6 +9,8 @@
 #     http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
 #     http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html
 
+import pymongo
+
 BOT_NAME = 'tutorial'
 
 SPIDER_MODULES = ['tutorial.spiders']
@@ -75,10 +77,15 @@ DOWNLOADER_MIDDLEWARES = {
 ITEM_PIPELINES = {
    'tutorial.pipelines.TutorialPipeline': 300,
 }
-MONGODB_HOST='127.0.0.1'
-MONGODB_PORT=27017
-MONGODB_DB='mydb'
-MONGODB_COLLECTION='servers'
+MONGO_HOST = "127.0.0.1"  # 主机IP
+MONGO_PORT = 27017  # 端口号
+MONGO_DB = "Spider"  # 库名
+MONGO_COLL = "servers"  # collection名
+# MONGO_USER = "zhangsan"
+# MONGO_PSW = "123456"
+# MONGO_USER = "zhangsan"
+# MONGO_PSW = "123456"
+
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See http://doc.scrapy.org/en/latest/topics/autothrottle.html
 #AUTOTHROTTLE_ENABLED = True

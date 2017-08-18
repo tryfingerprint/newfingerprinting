@@ -5,30 +5,21 @@
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: http://doc.scrapy.org/en/latest/topics/item-pipeline.html
 import pymongo
+from pymongo import MongoClient
 from scrapy.conf import settings
 from scrapy.exceptions import DropItem
 from scrapy import log
 
 class TutorialPipeline(object):
     def __init__(self):
-        connection = pymongo.Connection(
-            settings['MONGODB_HOST'],
-            settings['MONGODB_PORT']
-        )
-        db = connection[settings['MONGODB_DB']]
-        self.collection = db[settings['MONGODB_COLLECTION']]
+        # 链接数据库
+        self.client = pymongo.MongoClient(host=settings['MONGO_HOST'], port=settings['MONGO_PORT'])
+        # 数据库登录需要帐号密码的话
+        # self.client.admin.authenticate(settings['MINGO_USER'], settings['MONGO_PSW'])
+        self.db = self.client[settings['MONGO_DB']]  # 获得数据库的句柄
+        self.coll = self.db[settings['MONGO_COLL']]  # 获得collection的句柄
 
     def process_item(self, item, spider):
-        valid = True
-        for data in item:
-            # here we only check if the data is not null
-            # but we could do any crazy validation we want
-            if not data:
-                valid = False
-                raise DropItem("Missing %s of servers from %s" % (data, item['url']))
-        if valid:
-            self.collection.insert(dict(item))
-            log.msg("Item wrote to MongoDB database %s/%s" %
-                    (settings['MONGODB_DB'], settings['MONGODB_COLLECTION']),
-                    level=log.DEBUG, spider=spider)
-        return item
+        postItem = dict(item)  # 把item转化成字典形式
+        self.coll.insert(postItem)  # 向数据库插入一条记录
+        return item  # 会在控制台输出原item数据，可以选择不写
