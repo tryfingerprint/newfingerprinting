@@ -7,10 +7,7 @@ import urllib
 class TplinkSpider(scrapy.Spider):
     handle_httpstatus_list = [401]
     name = "tp-link"
-    start_urls = [
-        "http://1.53.110.127:8081/",
-        "http://37.123.244.206:1901/",
-        "http://1.52.79.73:8081/",
+    start_urls = ["http://1.52.79.73:8081/",
         "http://1.55.106.14:8081/",
         "http://1.52.107.211:8081/",
         "http://182.129.150.164:8069",
