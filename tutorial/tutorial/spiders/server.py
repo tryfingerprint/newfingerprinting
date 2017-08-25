@@ -37,32 +37,43 @@ class ServerSpider(scrapy.Spider):
         "http://1.52.79.73:8081/",
         "http://1.55.106.14:8081/",
         "http://1.52.107.211:8081/",
+        "http://198.91.51.234/",
+        "http://193.90.234.174/",
+        "http://75.144.136.137/",
+        "http://155.240.0.242",
+        "http://155.240.115.56/",
     ]
 
     def parse(self, response):
         ser = response.headers['Server']
-        router = ""
-        cms = ""
+        router = None
+        cms = None
+        firewall = None
 
-        '''
-        TP-LINK
-        '''
         if (ser==0):
             ser = "Server Not Found."
+        #TP-LINK
         elif (ser == "Router Webserver" or ser == "TP-LINK Router"):
             version = response.headers['WWW-Authenticate']
             ver = re.search('[Tt][Pp]-.*',version).group()
             router = ver
-        '''
-        juniper
-        '''
+        #SonicWALL
+        elif (ser == "SonicWALL"):
+            firewall = "SonicWALL"
+        #Check Point
+        elif (ser == "Check Point SVN foundation"):
+            firewall = "Check Point SVN foundation"
+        
+
+
+
+        #juniper
         juniper = response.xpath('//strong/text()').extract_first()
         if (juniper):
             router = juniper.strip(' \t\n\r')[0:-5]
 
-        '''
-        discuz
-        '''
+
+        #discuz
         res = response.xpath('//meta[@name="generator"]/@content').extract_first()
         urls = urljoin_rfc(response.url,"robots.txt")
         t = urllib.urlopen(urls)
@@ -72,7 +83,7 @@ class ServerSpider(scrapy.Spider):
         elif(a):
             cms = a
         else:
-            cms = ""
+            cms = None
 
         yield{
         "url":response.url,
@@ -81,4 +92,5 @@ class ServerSpider(scrapy.Spider):
         "Server":ser,
         "Router":router,
         "CMS":cms,
+        "Firewall":firewall,
         }
